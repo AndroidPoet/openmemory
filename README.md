@@ -16,6 +16,7 @@ One memory. Every AI tool. Yours forever.
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Bun](https://img.shields.io/badge/Bun-000000?logo=bun&logoColor=white)](https://bun.sh)
+[![Tests](https://img.shields.io/badge/Tests-199_passing-brightgreen)]()
 
 </div>
 
@@ -67,7 +68,17 @@ You: "I prefer TypeScript over JavaScript"
 - **REST API** — Any app can read/write memories
 - **100% local** — All data stays on your machine. SQLite. No cloud
 
-## Quick Start
+## Installation
+
+### Prerequisites
+
+Install [Bun](https://bun.sh) (required):
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+### Option 1: Clone and Run (recommended)
 
 ```bash
 git clone https://github.com/AndroidPoet/openmemory.git
@@ -76,7 +87,69 @@ bun install
 bun run dev
 ```
 
+### Option 2: npx (one-liner)
+
+```bash
+bunx openmemory-ai serve
+```
+
+### Option 3: Global Install
+
+```bash
+bun install -g openmemory-ai
+openmemory serve
+openmemory mcp    # start MCP server
+```
+
 Server starts at `http://localhost:3838`.
+
+## Setup with AI Tools
+
+### Claude Code
+
+Add to `~/.claude/claude_desktop_config.json` or your project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "openmemory": {
+      "command": "bun",
+      "args": ["run", "/path/to/openmemory/src/index.ts", "mcp"]
+    }
+  }
+}
+```
+
+If installed globally:
+
+```json
+{
+  "mcpServers": {
+    "openmemory": {
+      "command": "openmemory",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Cursor / Windsurf / Any MCP Client
+
+Same config — just point `command` to `bun` and `args` to the path.
+
+### REST API (ChatGPT, custom apps, anything)
+
+Start the server and call the API from any language:
+
+```bash
+bun run dev   # http://localhost:3838
+```
+
+Then just talk naturally:
+
+> "Remember that I prefer dark mode"
+> "What do you know about my project?"
+> "What's my name?"
 
 ## Usage
 
@@ -114,31 +187,6 @@ curl -X POST http://localhost:3838/api/v1/context \
   -H "Content-Type: application/json" \
   -d '{"query": "Tell me about the user", "format": "markdown"}'
 ```
-
-### MCP Server (Claude Code, Cursor, etc.)
-
-```bash
-bun run mcp
-```
-
-Add to your MCP config:
-
-```json
-{
-  "mcpServers": {
-    "openmemory": {
-      "command": "bun",
-      "args": ["run", "/path/to/openmemory/src/index.ts", "mcp"]
-    }
-  }
-}
-```
-
-Then just talk naturally:
-
-> "Remember that I prefer dark mode"
-> "What do you know about my project?"
-> "What's my name?"
 
 ## Architecture
 
@@ -202,11 +250,16 @@ Results are fused using [Reciprocal Rank Fusion](https://plg.uwaterloo.ca/~gvcor
 ## Performance
 
 ```
-Search latency:  0.3 - 0.8ms (in-memory, zero disk I/O)
+Search latency:  0.05 - 0.07ms (20 facts, in-memory)
+Scaling:         ~1.9ms at 500 facts
 Boot time:       < 1ms (loads all facts into RAM)
-Memory usage:    ~3.6KB per fact
-Extraction:      < 0.1ms per sentence (no AI, pure grammar)
+Memory usage:    ~3.8KB per fact
+Extraction:      4µs per sentence (no AI, pure grammar)
+Embeddings:      10µs per text
+Cosine sim:      0.6µs per comparison (1.6M ops/sec)
 ```
+
+199 tests. 0 failures. 254ms.
 
 ## How It's Different
 
@@ -262,6 +315,8 @@ PRs welcome. The codebase is small (~1500 lines) and readable.
 bun install
 bun run dev        # REST API on :3838
 bun run mcp        # MCP server
+bun test           # 199 tests
+bun run bench      # Performance benchmarks
 ```
 
 ## License

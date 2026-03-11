@@ -1,11 +1,11 @@
 {
-  "name": "openmemory",
+  "name": "openmemory-ai",
   "version": "0.1.0",
   "description": "Open source AI memory engine. Universal memory layer for Claude, ChatGPT, Cursor, and any AI tool.",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "src/index.ts",
   "bin": {
-    "openmemory": "./dist/index.js"
+    "openmemory": "./src/index.ts"
   },
   "scripts": {
     "dev": "bun run src/index.ts serve",
@@ -13,21 +13,31 @@
     "test": "bun test",
     "bench": "bun run tests/benchmark.ts",
     "build": "tsc",
-    "start": "node dist/index.js serve"
+    "start": "bun run src/index.ts serve"
   },
-  "keywords": ["ai", "memory", "knowledge-graph", "mcp", "claude", "llm", "vector-search"],
+  "keywords": ["ai", "memory", "knowledge-graph", "mcp", "claude", "chatgpt", "cursor", "llm", "vector-search", "bm25", "rag"],
+  "author": "Ranbir Singh <androidpoet@gmail.com> (https://github.com/AndroidPoet)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/AndroidPoet/openmemory"
   },
-  "engines": {
-    "node": ">=18.0.0"
+  "homepage": "https://github.com/AndroidPoet/openmemory#readme",
+  "bugs": {
+    "url": "https://github.com/AndroidPoet/openmemory/issues"
   },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "os": ["darwin", "linux", "win32"],
+  "files": [
+    "src/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@hono/node-server": "^1.19.11",
     "@modelcontextprotocol/sdk": "^1.27.1",
-    "better-sqlite3": "^12.6.2",
     "dotenv": "^17.3.1",
     "hono": "^4.12.7",
     "nanoid": "^5.1.6",
@@ -35,7 +45,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "latest",
     "typescript": "^5.9.3"
   }
