@@ -10,6 +10,8 @@
   "scripts": {
     "dev": "bun run src/index.ts serve",
     "mcp": "bun run src/index.ts mcp",
+    "test": "bun test",
+    "bench": "bun run tests/benchmark.ts",
     "build": "tsc",
     "start": "node dist/index.js serve"
   },
